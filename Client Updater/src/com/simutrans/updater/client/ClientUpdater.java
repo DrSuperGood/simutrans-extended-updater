@@ -88,8 +88,8 @@ public class ClientUpdater {
 		mainWindow.setVisible(true);
 	}
 
-	private final static String HASH_URL = "http://bridgewater-brunel.me.uk/downloads/nightly/nightly.hash";
-	private final static String ARCHIVE_URL = "http://bridgewater-brunel.me.uk/downloads/raw/simutrans/";
+	private final static String HASH_URL = "https://bridgewater-brunel.me.uk/downloads/nightly/nightly.hash";
+	private final static String ARCHIVE_URL = "https://bridgewater-brunel.me.uk/downloads/raw/simutrans/";
 	private final static String HASH_NAME = "Simutrans Extended.hash";
 
 	public static void main(String[] args) {
