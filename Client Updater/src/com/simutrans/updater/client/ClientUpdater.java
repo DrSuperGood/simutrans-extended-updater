@@ -91,6 +91,7 @@ public class ClientUpdater {
 	private final static String HASH_URL = "https://bridgewater-brunel.me.uk/downloads/nightly/nightly.hash";
 	private final static String ARCHIVE_URL = "https://bridgewater-brunel.me.uk/downloads/raw/simutrans/";
 	private final static String HASH_NAME = "Simutrans Extended.hash";
+	private final static String SKIPLIST_NAME = "Simutrans Extended.skip";
 
 	public static void main(String[] args) {
 		// Application command line state.
@@ -146,7 +147,7 @@ public class ClientUpdater {
 		// Body.
 		try {
 			final Path rootPath = Paths.get(root);
-			final Updater updater = new Updater(rootPath, new URL(HASH_URL), HASH_NAME, ARCHIVE_URL);
+			final Updater updater = new Updater(rootPath, new URL(HASH_URL), HASH_NAME, ARCHIVE_URL, SKIPLIST_NAME);
 
 			if (cl) {
 				updater.progressSubscription.addSubscription(state -> System.out.println("State: " + state.name()));
