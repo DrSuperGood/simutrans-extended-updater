@@ -16,6 +16,7 @@ public class Updater implements Runnable {
 	private final URL hashURL;
 	private final String hashName;
 	private final String archiveURLString;
+	private final String skiplistName;
 	
 	public final SubscriptionSite<ProgressState> progressSubscription = new SubscriptionSite<ProgressState>() {};
 	
@@ -27,11 +28,12 @@ public class Updater implements Runnable {
 	
 	public final SubscriptionSite<Throwable> exceptionSubscription = new SubscriptionSite<Throwable>() {};
 	
-	public Updater(final Path root, final URL hashURL, final String hashName, final String archiveURLString) {
+	public Updater(final Path root, final URL hashURL, final String hashName, final String archiveURLString, String skiplistName) {
 		this.root = root;
 		this.hashURL = hashURL;
 		this.hashName = hashName;
 		this.archiveURLString = archiveURLString;
+		this.skiplistName = skiplistName;
 	}
 	
 	public enum ProgressState {
@@ -99,6 +101,7 @@ public class Updater implements Runnable {
 		notifyProgress(ProgressState.INIT);
 		final Path hashFilePath = root.resolve(hashName);
 		final Path hashFilePathNew = root.resolve(hashName + ".tmp");
+		final Path skipFilePath = root.resolve(skiplistName);
 		boolean success = true;
 		try (final AsynchronousFileDownloader downloader = new AsynchronousFileDownloader()) {
 			if (Files.isRegularFile(hashFilePath)) {
@@ -122,6 +125,12 @@ public class Updater implements Runnable {
 			final List<String> newFiles = oldHashes.getDifferentFiles(newHashes);
 			final List<String> oldFiles = newHashes.getDifferentFiles(oldHashes);
 			
+			if (Files.exists(skipFilePath)) {
+				final List<String> skipFiles = Files.readAllLines(skipFilePath);
+				newFiles.removeAll(skipFiles);
+				oldFiles.removeAll(skipFiles);
+			}
+
 			if (oldFiles.size() > 0) {
 				notifyProgress(ProgressState.DELETING_FILES);
 				for (String file : oldFiles) {
